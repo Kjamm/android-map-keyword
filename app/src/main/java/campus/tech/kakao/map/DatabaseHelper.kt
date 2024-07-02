@@ -26,5 +26,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         const val COLUMN_ID = "id"
         const val COLUMN_NAME = "name"
         const val COLUMN_ADDRESS = "address"
+        
     }
 }

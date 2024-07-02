@@ -45,6 +45,5 @@ class MainActivity : AppCompatActivity() {
         val dbHelper = DatabaseHelper(this)
         dbHelper.close()
         super.onDestroy()
-
     }
 }

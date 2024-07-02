@@ -1,38 +1,50 @@
 package campus.tech.kakao.map
 
 import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import campus.tech.kakao.map.databinding.ActivityMainBinding
+import androidx.recyclerview.widget.RecyclerView
+import android.widget.EditText
+import campus.tech.kakao.map.R
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var placeDao: PlaceDao
-    private lateinit var adapter: PlaceAdapter
+    private lateinit var searchEditText: EditText
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_main)
 
-        placeDao = PlaceDao(this)
-        adapter = PlaceAdapter()
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
-        binding.recyclerView.adapter = adapter
+        searchEditText = findViewById(R.id.edit_search)
+        recyclerView = findViewById(R.id.recyclerView)
 
-        binding.buttonSearch.setOnClickListener {
-            val query = binding.editSearch.text.toString()
-            val places = placeDao.getPlaces(query)
-            if (places.isEmpty()) {
-                binding.textNoSearch.visibility = View.VISIBLE
-                binding.recyclerView.visibility = View.GONE
-            } else {
-                binding.textNoSearch.visibility = View.GONE
-                binding.recyclerView.visibility = View.VISIBLE
-                adapter.submitList(places)
-            }
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        val dbHelper = DatabaseHelper(this)
+        val db = dbHelper.writableDatabase
+
+        for (i in 1..10) {
+            val insertData =
+                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('cafe$i', '대전 유성구 봉명동 $i')"
+            Log.d("database", "찍힘")
+            val insertData2 =
+                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('Pharmacy$i', '대전 유성구 봉명동 $i')"
+            Log.d("database", "찍힘")
+            val insertData3 =
+                "INSERT INTO ${DatabaseHelper.TABLE_NAME} (${DatabaseHelper.COLUMN_NAME}, ${DatabaseHelper.COLUMN_ADDRESS}) VALUES ('Cinema$i', '대전 유성구 봉명동 $i')"
+            Log.d("database", "찍힘")
+
+            db.execSQL(insertData)
+            db.execSQL(insertData2)
+            db.execSQL(insertData3)
         }
+    }
+
+    override fun onDestroy() {
+        val dbHelper = DatabaseHelper(this)
+        dbHelper.close()
+        super.onDestroy()
+
     }
 }
